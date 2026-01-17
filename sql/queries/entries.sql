@@ -15,3 +15,12 @@ RETURNING *;
 
 -- name: GetEntry :one
 SELECT * FROM entries WHERE rcsb_id=$1;
+
+-- name: GetEntryByUserGroup :many
+SELECT * FROM entries WHERE user_group=$1;
+
+-- name: InsertGroup :one
+UPDATE entries SET user_group=$1 WHERE rcsb_id=$2 RETURNING *;
+
+-- name: RemoveGroup :one
+UPDATE entries SET user_group='' WHERE rcsb_id=$1 RETURNING *;

@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func GetIssueDataEntry(url string) (ProteinIssue, error, []string, []string) {
+func GetIssueDataEntry(url, id string) (ProteinIssue, error, []string, []string) {
 	res, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("Error here 1\n")
@@ -22,11 +22,13 @@ func GetIssueDataEntry(url string) (ProteinIssue, error, []string, []string) {
 	}
 	var list_of_urls_polymers []string
 	for _, polymer_id := range PDB.EntitiesInfo.PolymerID {
-		list_of_urls_polymers = append(list_of_urls_polymers, fmt.Sprintf("https://data.rcsb.org/rest/v1/core/polymer_entity/7o52/%v", polymer_id))
+		pol_url := fmt.Sprintf("https://data.rcsb.org/rest/v1/core/polymer_entity/%v/%v", id, polymer_id)
+		list_of_urls_polymers = append(list_of_urls_polymers, pol_url)
 	}
 	var list_of_urls_non_polymers []string
 	for _, non_polymer_id := range PDB.EntitiesInfo.NonPolymerID {
-		list_of_urls_non_polymers = append(list_of_urls_non_polymers, fmt.Sprintf("https://data.rcsb.org/rest/v1/core/nonpolymer_entity/7o52/%v", non_polymer_id))
+		nonpol_url := fmt.Sprintf("https://data.rcsb.org/rest/v1/core/nonpolymer_entity/%v/%v", id, non_polymer_id)
+		list_of_urls_non_polymers = append(list_of_urls_non_polymers, nonpol_url)
 	}
 	return PDB, nil, list_of_urls_polymers, list_of_urls_non_polymers
 }

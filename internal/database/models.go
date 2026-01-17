@@ -21,3 +21,28 @@ type Entry struct {
 	Method      string
 	UserGroup   string
 }
+
+type NonPolymer struct {
+	ID                uuid.UUID
+	EntryID           uuid.UUID
+	Nonpolname        string
+	CompID            string
+	Nonpoldescription string
+	FormulaWeight     float32
+	NumberOfMolecules int32
+	CreatedAt         time.Time
+}
+
+type Polymer struct {
+	ID                uuid.UUID
+	EntryID           uuid.UUID
+	Poldescription    string
+	Poltype           string
+	Polsequence       string
+	Pollength         int32
+	Formulaweight     float32
+	Source            string
+	Host              string
+	NumberOfMolecules int32
+	CreatedAt         time.Time
+}

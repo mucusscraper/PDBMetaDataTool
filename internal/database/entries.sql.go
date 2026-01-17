@@ -87,3 +87,87 @@ func (q *Queries) GetEntry(ctx context.Context, rcsbID string) (Entry, error) {
 	)
 	return i, err
 }
+
+const getEntryByUserGroup = `-- name: GetEntryByUserGroup :many
+SELECT id, created_at, updated_at, rcsb_id, deposit_date, doi, paper_title, method, user_group FROM entries WHERE user_group=$1
+`
+
+func (q *Queries) GetEntryByUserGroup(ctx context.Context, userGroup string) ([]Entry, error) {
+	rows, err := q.db.QueryContext(ctx, getEntryByUserGroup, userGroup)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Entry
+	for rows.Next() {
+		var i Entry
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.RcsbID,
+			&i.DepositDate,
+			&i.Doi,
+			&i.PaperTitle,
+			&i.Method,
+			&i.UserGroup,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const insertGroup = `-- name: InsertGroup :one
+UPDATE entries SET user_group=$1 WHERE rcsb_id=$2 RETURNING id, created_at, updated_at, rcsb_id, deposit_date, doi, paper_title, method, user_group
+`
+
+type InsertGroupParams struct {
+	UserGroup string
+	RcsbID    string
+}
+
+func (q *Queries) InsertGroup(ctx context.Context, arg InsertGroupParams) (Entry, error) {
+	row := q.db.QueryRowContext(ctx, insertGroup, arg.UserGroup, arg.RcsbID)
+	var i Entry
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.RcsbID,
+		&i.DepositDate,
+		&i.Doi,
+		&i.PaperTitle,
+		&i.Method,
+		&i.UserGroup,
+	)
+	return i, err
+}
+
+const removeGroup = `-- name: RemoveGroup :one
+UPDATE entries SET user_group='' WHERE rcsb_id=$1 RETURNING id, created_at, updated_at, rcsb_id, deposit_date, doi, paper_title, method, user_group
+`
+
+func (q *Queries) RemoveGroup(ctx context.Context, rcsbID string) (Entry, error) {
+	row := q.db.QueryRowContext(ctx, removeGroup, rcsbID)
+	var i Entry
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.RcsbID,
+		&i.DepositDate,
+		&i.Doi,
+		&i.PaperTitle,
+		&i.Method,
+		&i.UserGroup,
+	)
+	return i, err
+}
