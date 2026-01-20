@@ -18,7 +18,7 @@ type Report struct {
 var templateFS embed.FS
 
 func GenerateHTML(filename string, data Report) error {
-	templ, err := template.ParseFS(templateFS, "templates/report.html")
+	templ, err := template.ParseFS(templateFS, "templates/index.html")
 	if err != nil {
 		return err
 	}
