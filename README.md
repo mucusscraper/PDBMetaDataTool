@@ -50,6 +50,7 @@ group_show {group_name} - shows info about the entries of an existing group
 remove_group {pdb_id} {pdb_id} .... - removes the existing group of at least one PDB-ID already uploaded to the database
 report {report_file_name} {pdb_id} {pdb_id} .... - creates a report file with the specified name containing info about the PDB-ID entries already uploaded to the database
 group_report {group_name} - creates a report file of the PDB-ID entries of the specified group
+exit - exits the program
 ```
 The main workflow to use PDBMDT is to upload related PDB entries, organize them into the same group and generate a report:
 

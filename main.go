@@ -30,7 +30,7 @@ type Config struct {
 }
 
 func main() {
-	file, _ := os.Open(".pdbmdt.config.json")
+	file, _ := os.Open(".pdbmdtconfig.json")
 	defer file.Close()
 	var config Config
 	json.NewDecoder(file).Decode(&config)
@@ -506,6 +506,10 @@ func main() {
 				fmt.Printf("remove_group {pdb_id} {pdb_id} .... - removes the existing group of at least one PDB-ID already uploaded to the database\n\n")
 				fmt.Printf("report {report_file_name} {pdb_id} {pdb_id} .... - creates a report file with the specified name containing info about the PDB-ID entries already uploaded to the database\n\n")
 				fmt.Printf("group_report {group_name} - creates a report file of the PDB-ID entries of the specified group\n\n")
+				fmt.Printf("exit - exits the program\n\n")
+			} else if ids[0] == "exit" && len(ids) == 1 {
+				os.Exit(0)
+				return
 			} else {
 				fmt.Printf("Command not found!\n")
 			}
